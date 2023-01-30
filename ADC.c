@@ -54,13 +54,20 @@ extern void ADC0_InSeq2(uint16_t *Result,uint16_t *duty){
     //ADC Processor Sample Sequence Initiate (ADCPSSI)
        ADC0->PSSI = 0x00000004;
        while((ADC0->RIS&0x04)==0){}; // espera al convertidor
-       //Result[1] = ADC0->SSFIFO2&0xFFF; //  Leer  el resultado almacenado en la pila2
-       //Result[0] = ADC0->SSFIFO2&0xFFF;
+       Result[2] = ADC0->SSFIFO2&0xFFF;
+
+       Result[1] = ADC0->SSFIFO2&0xFFF; //  Leer  el resultado almacenado en la pila2
+       Result[0] = ADC0->SSFIFO2&0xFFF;
+       Result[2] = ADC0->SSFIFO2&0xFFF;
        //global = &Result[0];
-       //duty[1] = (Result[1]*46875)/4096;
+       
+       
+       duty[0] = 50000 - (Result[0]*5000)/4096;
+       duty[1] = 50000 - (Result[1]*5000)/4096;
+       duty[2] = 50000 - (Result[2]*5000)/4096;
        //duty[0] = (Result[0]*46875)/4096;
        //duty[1] = 47500 - (Result[1]*5000)/4096;
-       //duty[0] = 47500 - (Result[0]*5000)/4096;
+       //duty[2] = 47500 - (Result[0]*5000)/4096;
        ADC0->ISC = 0x0004;  //Conversion finalizada
 
 }
